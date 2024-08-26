@@ -1,0 +1,17 @@
+{
+  "name": "04_scraping_js",
+  "type": "module",
+  "private": true,
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Dakota",
+  "license": "MIT",
+  "description": "",
+  "dependencies": {
+    "axios": "^1.7.5",
+    "cheerio": "^1.0.0"
+  }
+}
