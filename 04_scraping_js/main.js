@@ -17,9 +17,30 @@ let extensions = new Set();
 
 // Define the extensions of the files desired
 const desiredExtensions = new Set([
-    'fed', 
-    'fianl sauser musquily 1', 
-    'axel-lonewolf)(v14)(',
+    // 'filename',
+    'fed',
+    // 'jpg',
+    // 'png',
+    // 'mp3',
+    // 'php',
+    // 'zip',
+    // 'exe',
+    // 'rar',
+    // 'bmp',
+    // 'ogg',
+    // 'mid',
+    // 'pac',
+    // 'css',
+    // 'fianl sauser musquily 1',
+    // 'txt',
+    // 'fkc',
+    // 'blade wing',
+    // 'cfg',
+    // 'flg',
+    // 'gif',
+    // 'fbg',
+    // 'ico',
+    // 'axel-lonewolf)(v14)('
 ]);
 
 // Define default download headers
@@ -90,29 +111,15 @@ async function parsePage() {
         let name   = row.find('td').eq(1).text().trim();
         let author = row.find('td').eq(3).text().trim();
         let link = row.find('td').eq(1).find('a').first().attr('href');
-
-        // Record extension in set of extensions
         let ext = name.split('.').pop().toLowerCase();
         extensions.add(ext);
 
-        // Log info about the row to the console
-        console.log(`Row ${i +1}: \n\tfilename ${name} \n\tAuthor ${author} \n\tLink ${link} \n\tExtension ${ext}`);
+        // Is the file some thing I want?
+        if (desiredExtensions.has(ext)) {
+            // Log info about the row to the console
+            console.log(`Row ${i +1}: \n\tfilename ${name} \n\tAuthor ${author} \n\tLink ${link} \n\tExtension ${ext}`);
+        }
     }
-
-    // table2.find('tr').each((index, element) => {
-    //     let row = $(element);
-
-    //     let name   = row.find('td').eq(1).text().trim();
-    //     let author = row.find('td').eq(3).text().trim();
-    //     let link = row.find('td').eq(1).find('a').first().attr('href');
-
-    //     // Record extension in set of extensions
-    //     let ext = name.split('.').pop().toLowerCase();
-    //     extensions.add(ext);
-
-    //     // Log info about the file to the console
-    //     console.log(`Row ${index +1}: \n\tfilename ${name} \n\tAuthor ${author} \n\tLink ${link} \n\tExtension ${ext}`);
-    // });
 };
 
 // parse the page and print unique extensions
