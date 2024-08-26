@@ -95,6 +95,30 @@ async function getPage() {
 };
 
 
+// Function to download enemy file if the file doesn't already exist
+async function downloadEnemy(target, destination) {
+
+    if (!fs.existsSync(destination)) {
+
+        console.log("File not found attempting to download");
+    
+        // Request file and log response
+        let response = await axios.get(target, download_config);
+        console.log(response.status);
+        // console.log(response.data);
+    
+        // Save data to file
+        fs.writeFileSync(destination, response.data);
+        console.log("File Downloaded Waiting two seconds to continue");
+        await setTimeout(2000);
+    
+    } else {
+        console.log("File already downloaded");
+    };
+
+}
+
+
 // Define function to parse a page
 async function parsePage() {
     const html = await getPage();
@@ -118,10 +142,13 @@ async function parsePage() {
         if (desiredExtensions.has(ext)) {
             // Log info about the row to the console
             console.log(`Row ${i +1}: \n\tfilename ${name} \n\tAuthor ${author} \n\tLink ${link} \n\tExtension ${ext}`);
+
+            // Download the enemy file
+            await downloadEnemy(`http://acmlm.kafuka.org/uploader/${link}`, path.join(dir, 'enemies', name));
         }
     }
 };
 
 // parse the page and print unique extensions
 await parsePage();
-console.log(extensions);
+// console.log(extensions);
