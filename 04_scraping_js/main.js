@@ -6,10 +6,13 @@ import axios from 'axios';
 import path from 'path';
 import fs from 'fs';
 
-
+// Define necessary filepaths
 const filename = fileURLToPath(import.meta.url);
 const dir = dirname(filename);
 const filepath = path.join(dir, 'page.html');
+
+// Define set to record unique file extensions
+let extensions = new Set();
 
 
 // Define the extensions of the files desired
@@ -71,6 +74,7 @@ async function getPage() {
 };
 
 
+// Define function to parse a page
 async function parsePage() {
     const html = await getPage();
     const $ = cheerio.load(html);
@@ -82,11 +86,16 @@ async function parsePage() {
 
         let name   = row.find('td').eq(1).text().trim();
         let author = row.find('td').eq(3).text().trim();
-        let ext = name.split('.').pop().toLowerCase();
         let link = row.find('td').eq(1).find('a').first().attr('href');
+
+        // Record extension in set of extensions
+        let ext = name.split('.').pop().toLowerCase();
+        extensions.add(ext);
 
         console.log(`Row ${index +1}: \n\tfilename ${name} \n\tAuthor ${author} \n\tLink ${link} \n\tExtension ${ext}`);
     });
 };
 
+// parse the page and print unique extensions
 await parsePage();
+console.log(extensions);
