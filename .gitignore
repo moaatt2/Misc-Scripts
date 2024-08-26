@@ -2,3 +2,6 @@ node_modules
 
 # Personal notes
 notes.md
+
+# Ignore fraxy enemy files
+*.fed
