@@ -1,3 +1,4 @@
+import { setTimeout } from "timers/promises";
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import axios from 'axios';
@@ -29,7 +30,9 @@ if (!fs.existsSync(filepath)) {
 
     // Save data to file
     fs.writeFileSync(filepath, response.data);
-    console.log("File Downloaded");
+    console.log("File Downloaded Waiting two seconds to continue");
+    await setTimeout(2000);
+    console.log("Two seconds waited");
 
 } else {
     console.log("File already downloaded");
