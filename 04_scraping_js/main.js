@@ -81,9 +81,12 @@ async function parsePage() {
 
     let table2 = $('table').eq(1);
 
-    table2.find('tr').each((index, element) => {
+    // Itterate over each table row
+    for (let i = 0; i < table2.find("tr").length; i++) {
+        let element = table2.find("tr").eq(i);
         let row = $(element);
 
+        // Find info about the row
         let name   = row.find('td').eq(1).text().trim();
         let author = row.find('td').eq(3).text().trim();
         let link = row.find('td').eq(1).find('a').first().attr('href');
@@ -92,8 +95,24 @@ async function parsePage() {
         let ext = name.split('.').pop().toLowerCase();
         extensions.add(ext);
 
-        console.log(`Row ${index +1}: \n\tfilename ${name} \n\tAuthor ${author} \n\tLink ${link} \n\tExtension ${ext}`);
-    });
+        // Log info about the row to the console
+        console.log(`Row ${i +1}: \n\tfilename ${name} \n\tAuthor ${author} \n\tLink ${link} \n\tExtension ${ext}`);
+    }
+
+    // table2.find('tr').each((index, element) => {
+    //     let row = $(element);
+
+    //     let name   = row.find('td').eq(1).text().trim();
+    //     let author = row.find('td').eq(3).text().trim();
+    //     let link = row.find('td').eq(1).find('a').first().attr('href');
+
+    //     // Record extension in set of extensions
+    //     let ext = name.split('.').pop().toLowerCase();
+    //     extensions.add(ext);
+
+    //     // Log info about the file to the console
+    //     console.log(`Row ${index +1}: \n\tfilename ${name} \n\tAuthor ${author} \n\tLink ${link} \n\tExtension ${ext}`);
+    // });
 };
 
 // parse the page and print unique extensions
