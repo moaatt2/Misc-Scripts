@@ -1,7 +1,7 @@
 import { setTimeout } from "timers/promises";
 import { fileURLToPath } from 'url';
 import * as cheerio from 'cheerio';
-import { dirname } from 'path';
+import { dirname, parse } from 'path';
 import axios from 'axios';
 import path from 'path';
 import fs from 'fs';
@@ -70,3 +70,23 @@ async function getPage() {
     }
 };
 
+
+async function parsePage() {
+    const html = await getPage();
+    const $ = cheerio.load(html);
+
+    let table2 = $('table').eq(1);
+
+    table2.find('tr').each((index, element) => {
+        let row = $(element);
+
+        let name   = row.find('td').eq(1).text().trim();
+        let author = row.find('td').eq(3).text().trim();
+        let ext = name.split('.').pop().toLowerCase();
+        let link = row.find('td').eq(1).find('a').first().attr('href');
+
+        console.log(`Row ${index +1}: \n\tfilename ${name} \n\tAuthor ${author} \n\tLink ${link} \n\tExtension ${ext}`);
+    });
+};
+
+await parsePage();
