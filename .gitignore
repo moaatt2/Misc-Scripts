@@ -5,3 +5,6 @@ notes.md
 
 # Ignore fraxy enemy files
 *.fed
+
+# Ignore projects cached page
+04_scraping_js/*.html
