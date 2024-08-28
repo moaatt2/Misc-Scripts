@@ -1,5 +1,11 @@
 node_modules
 
+# Ignore javascript compiled from typescript
+dist
+
+# Ignore files donwloaded/created by scripts
+artifacts
+
 # Personal notes
 notes.md
 
