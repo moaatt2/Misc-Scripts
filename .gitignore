@@ -3,8 +3,7 @@ node_modules
 # Personal notes
 notes.md
 
-# Ignore fraxy enemy files
-*.fed
-
-# Ignore projects cached page
+# Ignore Artifacts from project 04
 04_scraping_js/*.html
+04_scraping_js/*.txt
+04_scraping_js/enemies/*.fed
