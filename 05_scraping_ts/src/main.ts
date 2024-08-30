@@ -84,8 +84,11 @@ async function parsePage() {
         // Get filename from link
         let filename = link.split('/').pop();
 
+        // Get extension from filename
+        let extension = filename?.split('.').pop();
+
         // print information to console
-        console.log(`${i} name: ${name}\n\tauthor: ${author}\n\tlink: ${link}\n\tfilename: ${filename}`);
+        console.log(`${i} name: ${name}\n\tauthor: ${author}\n\tlink: ${link}\n\tfilename: ${filename}\n\textension: ${extension}`);
     }
 
 }
