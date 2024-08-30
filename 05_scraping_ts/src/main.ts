@@ -76,13 +76,16 @@ async function parsePage() {
         // Get data from the row
         let name   = row.find('td').eq(1).text().trim();
         let author = row.find('td').eq(3).text().trim();
-        let link   = row.find('td').eq(4).find('a').first().attr('href');
+        let link   = row.find('td').eq(4).find('a').eq(0).attr('href');
 
         // Prepend base  url to link
         link = 'https://fraxyhq.net/uploader/' + link;
 
+        // Get filename from link
+        let filename = link.split('/').pop();
+
         // print information to console
-        console.log(`${i} name: ${name}\n\tauthor: ${author}\n\tlink: ${link}`);
+        console.log(`${i} name: ${name}\n\tauthor: ${author}\n\tlink: ${link}\n\tfilename: ${filename}`);
     }
 
 }
