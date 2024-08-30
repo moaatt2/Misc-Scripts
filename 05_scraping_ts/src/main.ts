@@ -1,6 +1,7 @@
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import axios from 'axios';
+import * as cheerio from 'cheerio';
 import path from 'path';
 import fs from 'fs';
 
@@ -60,7 +61,30 @@ async function getPage() {
 };
 
 
-// View target page in console
-let content = await getPage();
-console.log(content);
+// Define a function to parse the page
+async function parsePage() {
+    const html = await getPage();
+    const $ = cheerio.load(html);
 
+    let table2 = $('table').eq(1);
+
+    // Itterate over each table row
+    for (let i = 0; i < table2.find("tr").length; i++) {
+        let element = table2.find("tr").eq(i);
+        let row = $(element);
+
+        // Get data from the row
+        let name   = row.find('td').eq(1).text().trim();
+        let author = row.find('td').eq(3).text().trim();
+        let link   = row.find('td').eq(4).find('a').first().attr('href');
+
+        // Prepend base  url to link
+        link = 'https://fraxyhq.net/uploader/' + link;
+
+        // print information to console
+        console.log(`${i} name: ${name}\n\tauthor: ${author}\n\tlink: ${link}`);
+    }
+
+}
+
+parsePage();
