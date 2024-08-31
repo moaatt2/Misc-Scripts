@@ -1,3 +1,4 @@
+import { setTimeout } from "timers/promises";
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import axios from 'axios';
@@ -61,6 +62,33 @@ async function getPage() {
 };
 
 
+// Function to download file
+async function download_file(file_uri: string, save_location: string) {
+    // See if file already exists, and download it if it doesn't
+    if (!fs.existsSync(save_location)) {
+        try {
+            console.log("File not found attempting to download");
+        
+            // Request file and log response
+            let response = await axios.get(file_uri);
+            console.log(response.status);
+            // console.log(response.data);
+        
+            // Save data to file
+            fs.writeFileSync(save_location, response.data);
+            console.log("File Downloaded Waiting two seconds to continue");
+            await setTimeout(2000);
+            console.log("Two seconds waited");
+        } catch {
+            console.log('There was an issue downloading the file.');
+        }
+    // If the file exists don't do anything
+    } else {
+        console.log("File already downloaded");
+    };
+}
+
+
 // Define a function to parse the page
 async function parsePage() {
     const html = await getPage();
@@ -82,15 +110,19 @@ async function parsePage() {
         link = 'https://fraxyhq.net/uploader/' + link;
 
         // Get filename from link
-        let filename = link.split('/').pop();
+        let filename = link.split('/').pop() ?? link;
 
         // Get extension from filename
         let extension = filename?.split('.').pop();
 
         // print information to console
         console.log(`${i} name: ${name}\n\tauthor: ${author}\n\tlink: ${link}\n\tfilename: ${filename}\n\textension: ${extension}`);
+
+        // Download file
+        let enemy_fp = path.join(dir, '..', 'artifacts', 'enemies', filename);
+        await download_file(link, enemy_fp);
     }
 
 }
 
-parsePage();
+await parsePage();
