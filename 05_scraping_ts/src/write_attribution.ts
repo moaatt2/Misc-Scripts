@@ -1,5 +1,5 @@
 import { fileURLToPath } from 'url';
-import { dirname } from 'path';
+import { dirname, extname } from 'path';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
 import path from 'path';
@@ -15,6 +15,19 @@ const filepath: string = path.join(dir, '..', 'artifacts', 'page.html');
 
 // Set the target page to scrape from
 const target: string = "https://fraxyhq.net/uploader/index.php#body";
+
+// Create an accumulator to store new extensions
+let extensions = new Set();
+
+// Create a set to record desired extensions
+const desiredExtensions = new Set([
+    // 'undefined',
+    'fed',
+    // 'zip',
+    // 'rar',
+    'The Phantom_-_Worst Boss Contest - The Phantom',
+    'dracmeister_-_XB42 - Stratobomber ',
+]);
 
 // Fetch the page
 async function fetchPage() {
@@ -82,9 +95,15 @@ async function parsePage() {
         // Get filename from link
         let filename = link?.split('/').pop() ?? link;
 
-        // Define attribution record and save it to a file
-        let attribution_record = `\t* ${filename} - ${author}\n\t\t* ${link}\n\t\t* ${target}\n`;
-        fs.appendFileSync(path.join(dir, '..', 'artifacts', 'attribution.txt'), attribution_record);
+        // Get extension from filename
+        let extension = filename?.split('.').pop() ?? '';
+        extensions.add(extension);
+
+        // Define attribution record and save it to a file if it has a desired extension
+        if (desiredExtensions.has(extension)) {
+            let attribution_record = `\t* ${filename} - ${author}\n\t\t* ${link}\n\t\t* ${target}\n`;
+            fs.appendFileSync(path.join(dir, '..', 'artifacts', 'attribution.txt'), attribution_record);
+        };
     });
 
     // Inform the user the task is complete
@@ -92,3 +111,6 @@ async function parsePage() {
 }
 
 await parsePage();
+
+// // Log all applicable file extentions to console
+// console.log(extensions);
