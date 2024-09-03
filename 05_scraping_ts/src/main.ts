@@ -17,6 +17,19 @@ const filepath: string = path.join(dir, '..', 'artifacts', 'page.html');
 // Set the target page to scrape from
 const target: string = "https://fraxyhq.net/uploader/index.php#body";
 
+// Create an accumulator to store new extensions
+let extensions = new Set();
+
+// Create a set to record desired extensions
+const desiredExtensions = new Set([
+    // 'undefined',
+    'fed',
+    // 'zip',
+    // 'rar',
+    'The Phantom_-_Worst Boss Contest - The Phantom',
+    'dracmeister_-_XB42 - Stratobomber ',
+]);
+
 
 // Fetch the page
 async function fetchPage() {
@@ -113,16 +126,21 @@ async function parsePage() {
         let filename = link.split('/').pop() ?? link;
 
         // Get extension from filename
-        let extension = filename?.split('.').pop();
+        let extension = filename?.split('.').pop() ?? '';
+        extensions.add(extension)
 
-        // print information to console
-        console.log(`${i} name: ${name}\n\tauthor: ${author}\n\tlink: ${link}\n\tfilename: ${filename}\n\textension: ${extension}`);
+        if (desiredExtensions.has(extension)) {
+            // print information to console
+            console.log(`${i} name: ${name}\n\tauthor: ${author}\n\tlink: ${link}\n\tfilename: ${filename}\n\textension: ${extension}`);
 
-        // Download file
-        let enemy_fp = path.join(dir, '..', 'artifacts', 'enemies', filename);
-        await download_file(link, enemy_fp);
+            // Download file
+            let enemy_fp = path.join(dir, '..', 'artifacts', 'enemies', filename);
+            await download_file(link, enemy_fp);
+        };
     }
 
 }
 
+// Run script and show all found extensions
 await parsePage();
+// console.log(extensions);
