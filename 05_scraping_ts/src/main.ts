@@ -30,6 +30,9 @@ const desiredExtensions = new Set([
     'dracmeister_-_XB42 - Stratobomber ',
 ]);
 
+// Set subfolder in artifacts to download files
+const download_folder = 'enemies';
+
 
 // Fetch the page
 async function fetchPage() {
@@ -134,7 +137,7 @@ async function parsePage() {
             console.log(`${i} name: ${name}\n\tauthor: ${author}\n\tlink: ${link}\n\tfilename: ${filename}\n\textension: ${extension}`);
 
             // Download file
-            let enemy_fp = path.join(dir, '..', 'artifacts', 'enemies', filename);
+            let enemy_fp = path.join(dir, '..', 'artifacts', download_folder, filename);
             await download_file(link, enemy_fp);
         };
     }
