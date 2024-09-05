@@ -18,7 +18,7 @@ if (!fs.existsSync(filepath)) {
     console.log("File not found attempting to download");
 
     // Request file and log response
-    let response = await axios.get(url);
+    let response = await axios.get(url, {responseType: 'arraybuffer'});
     console.log(response.status);
     // console.log(response.data);
 

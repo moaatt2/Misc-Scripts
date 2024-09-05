@@ -86,7 +86,7 @@ async function download_file(file_uri: string, save_location: string) {
             console.log("File not found attempting to download");
         
             // Request file and log response
-            let response = await axios.get(file_uri);
+            let response = await axios.get(file_uri, {responseType: 'arraybuffer'});
             console.log(response.status);
             // console.log(response.data);
         
