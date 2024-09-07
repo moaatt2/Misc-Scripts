@@ -21,3 +21,30 @@ const zip = new AdmZip(archive);
 zip.extractAllTo(destination, true);
 
 
+// Define a function to get all extensions of files in a folder and its subdirectories
+function getAllExtensions(dirPath: string): Set<string> {
+    // Create a set to contain extensions
+    let extensions = new Set<string>();
+
+    // Get all items in the destination directory and itterate over them
+    const items = fs.readdirSync(dirPath, {withFileTypes: true});
+    for (const item of items) {
+
+        // If it is a folder run recursively otherwise add the extension to the list of extensions
+        if (item.isDirectory()) {
+            const subDirExtensions = getAllExtensions(path.join(dirPath, item.name));
+            extensions = new Set([...extensions, ...subDirExtensions]);
+        } else {
+            let extension = item.name.split('.').pop() ?? '';
+            extensions.add(extension);
+        }
+    }
+
+    // return the set of extensions
+    return extensions;
+}
+
+
+// Find all extensions
+console.log(getAllExtensions(destination));
+
