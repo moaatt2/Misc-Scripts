@@ -45,6 +45,23 @@ function getAllExtensions(dirPath: string): Set<string> {
 }
 
 
-// Find all extensions
-console.log(getAllExtensions(destination));
+// Define a function to determine the type of 
+function categorizeDirectory(dirPath: string) {
 
+    // Get extensions of files in extracted archive
+    let extensions = getAllExtensions(dirPath);
+
+    if (extensions.has('ftd') || extensions.has('ftb')) {
+        return 'try';
+    } else if (extensions.has('fpl')) {
+        return 'ship';
+    } else if (extensions.has('fed')) {
+        return 'enemy';
+    } else {
+        return 'unknown';
+    }
+}
+
+
+// Determine type of archive
+console.log(categorizeDirectory(destination));
