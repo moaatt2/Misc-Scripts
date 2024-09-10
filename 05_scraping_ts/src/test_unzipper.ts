@@ -3,22 +3,25 @@ import { dirname } from 'path';
 import path from 'path';
 import fs from 'fs';
 import AdmZip from 'adm-zip';
+import { createExtractorFromFile } from "node-unrar-js";
+
 
 // Get path to archive file
 const filename: string = fileURLToPath(import.meta.url);
 const dir: string = dirname(filename);
 
-// Test archive to extract
-const archive = path.join(dir, '..', 'artifacts', 'archives', '[][][][]_-_Eredar-Aquas.zip');
+// Define folder where archives live
+const archive_folder = path.join(dir, '..', 'artifacts', 'archives');
 
-// Where to store archive
-const destination = path.join(dir, '..', 'artifacts', 'archives', '[][][][]_-_Eredar-Aquas');
+// Name of the archive to extract
+const archive_file = '[][][][]_-_Eredar-Aquas.zip';
 
-// Load the zip file
-const zip = new AdmZip(archive);
+// Split the into name and type
+const archive_type = archive_file.split('.').pop() || '';
+const archive_name = archive_file.split('.')[0];
 
-// Extract the files to the path
-zip.extractAllTo(destination, true);
+// Determine destination
+const destination = path.join(archive_folder, archive_name);
 
 
 // Define a function to get all extensions of files in a folder and its subdirectories
@@ -62,6 +65,31 @@ function categorizeDirectory(dirPath: string) {
     }
 }
 
+// Change extract logic based on archive type
+if (archive_type == 'zip') {
+    console.log('Zip File Detected Extracting');
+    
+    // Extact archive
+    const zip = new AdmZip(path.join(archive_folder, archive_file))
+    zip.extractAllTo(destination, true)
+    console.log('Zip File Extracted, determining type');
 
-// Determine type of archive
-console.log(categorizeDirectory(destination));
+    // Log type of folder to console
+    console.log(`Archive contains ${categorizeDirectory(destination)}`);
+
+} else if (archive_type == 'rar') {
+    console.log('Rar archive Detected - Extracting');
+
+    // Extract Archive
+    const extractor = await createExtractorFromFile({
+        filepath: path.join(archive_folder, archive_file),
+        targetPath: destination
+    });
+    [...extractor.extract().files];
+
+    // Log type of folder to console
+    console.log(`Archive contains ${categorizeDirectory(destination)}`);
+
+} else {
+    console.log('Unknown file type');
+}
