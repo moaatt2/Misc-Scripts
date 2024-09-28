@@ -5,7 +5,6 @@ import * as cheerio from 'cheerio';
 import path from 'path';
 import fs from 'fs';
 
-
 // Find and record current directory
 const filename: string = fileURLToPath(import.meta.url);
 const dir: string = dirname(filename);
@@ -19,14 +18,27 @@ const target: string = "https://fraxyhq.net/uploader/index.php#body";
 // Create an accumulator to store new extensions
 let extensions = new Set();
 
-// Create a set to record desired extensions
-const desiredExtensions = new Set([
+// Initialize text accumulation variables
+let enemyText = 'Enemies:\n';
+let tryText = 'Scenarios:\n';
+let shipText = 'Ships:\n';
+
+// Create sets to record extension categories
+const enemyExtensions = new Set([
     // 'undefined',
     'fed',
     // 'zip',
     // 'rar',
     'The Phantom_-_Worst Boss Contest - The Phantom',
     'dracmeister_-_XB42 - Stratobomber ',
+]);
+const archiveExtensions = new Set([
+    // 'undefined',
+    // 'fed',
+    'zip',
+    'rar',
+    // 'The Phantom_-_Worst Boss Contest - The Phantom',
+    // 'dracmeister_-_XB42 - Stratobomber ',
 ]);
 
 // Fetch the page
@@ -72,6 +84,45 @@ async function getPage() {
     }
 };
 
+// Define a function to get all extensions of files in a folder and its subdirectories
+function getAllExtensions(dirPath: string): Set<string> {
+    // Create a set to contain extensions
+    let extensions = new Set<string>();
+
+    // Get all items in the destination directory and itterate over them
+    const items = fs.readdirSync(dirPath, {withFileTypes: true});
+    for (const item of items) {
+
+        // If it is a folder run recursively otherwise add the extension to the list of extensions
+        if (item.isDirectory()) {
+            const subDirExtensions = getAllExtensions(path.join(dirPath, item.name));
+            extensions = new Set([...extensions, ...subDirExtensions]);
+        } else {
+            let extension = item.name.split('.').pop() ?? '';
+            extensions.add(extension);
+        }
+    }
+
+    // return the set of extensions
+    return extensions;
+}
+
+// Define a function to determine the type of 
+function categorizeDirectory(dirPath: string) {
+
+    // Get extensions of files in extracted archive
+    let extensions = getAllExtensions(dirPath);
+
+    if (extensions.has('ftd') || extensions.has('ftb')) {
+        return 'try';
+    } else if (extensions.has('fpl')) {
+        return 'ship';
+    } else if (extensions.has('fed')) {
+        return 'enemy';
+    } else {
+        return 'unknown';
+    }
+}
 
 // Define a function to parse the page
 async function parsePage() {
@@ -98,13 +149,51 @@ async function parsePage() {
         // Get extension from filename
         let extension = filename?.split('.').pop() ?? '';
         extensions.add(extension);
+        
+        // Create Attribution record
+        let attributionRecord = `\t* ${filename} - ${author}\n\t\t* ${link}\n\t\t* ${target}\n`;
 
-        // Define attribution record and save it to a file if it has a desired extension
-        if (desiredExtensions.has(extension)) {
-            let attribution_record = `\t* ${filename} - ${author}\n\t\t* ${link}\n\t\t* ${target}\n`;
-            fs.appendFileSync(path.join(dir, '..', 'artifacts', 'attribution.txt'), attribution_record);
+        // If the extension is an enemy extension add the attribution to enemy text
+        if (enemyExtensions.has(extension)) {
+            enemyText += attributionRecord;
+        };
+
+        // Handle archives
+        if (archiveExtensions.has(extension)) {
+            // Determine if extracted folder exists
+            let archiveName = filename.split('.')[0];
+            let expectedPath = path.join(dir, '..', 'artifacts', 'archives', archiveName);
+            if (fs.existsSync(expectedPath)) {
+                switch (categorizeDirectory(expectedPath)) {
+                    case 'try':
+                        tryText += attributionRecord;
+                        break;
+                    
+                    case 'ship':
+                        shipText += attributionRecord;
+                        break;
+                    
+                    case 'enemy':
+                        enemyText += attributionRecord;
+                        break;
+                }
+            }
         };
     });
+
+    // Write text to file
+    if (enemyText.length > 9) {
+        enemyText += '\n';
+        fs.appendFileSync(path.join(dir, '..', 'artifacts', 'attribution.txt'), enemyText);
+    };
+    if (shipText.length > 7) {
+        shipText += '\n';
+        fs.appendFileSync(path.join(dir, '..', 'artifacts', 'attribution.txt'), shipText);
+    };
+    if (tryText.length > 11) {
+        tryText += '\n';
+        fs.appendFileSync(path.join(dir, '..', 'artifacts', 'attribution.txt'), tryText);
+    };
 
     // Inform the user the task is complete
     console.log('Attribution file written.')
