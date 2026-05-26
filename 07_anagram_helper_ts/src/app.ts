@@ -8,6 +8,20 @@ const rl = createInterface({
 });
 
 
+// Tell Typescript that I am adding a custom function to string prototype
+declare global {
+    interface String {
+        count(char: string): number;
+    }
+}
+
+
+// Add custom string function for counting the number of a character in a string
+String.prototype.count = function (char: string): number {
+    return this.split(char).length - 1;
+}
+
+
 // create function to process provided cypher text
 function processAnagram(cypherText: string): void {
 
@@ -16,7 +30,8 @@ function processAnagram(cypherText: string): void {
 
     // Calculate number of possibilities
     // For a string of length n, the number of possible arrangements is n!
-    let possibilities = factorial(cypherText.length);
+    // Ignore spaces as they are in fixed positions
+    let possibilities = factorial(cypherText.length - cypherText.count(' '));
 
     // Inform user of the number of possibilities
     console.log(`The are ${possibilities} possible arrangements of the provided cypher text.`);
