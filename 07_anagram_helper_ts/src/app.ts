@@ -33,6 +33,15 @@ function processAnagram(cypherText: string): void {
     // Ignore spaces as they are in fixed positions
     let possibilities = factorial(cypherText.length - cypherText.count(' '));
 
+    // Duplicate Characters reduce the number of possibilities
+    //   for each non-space character divide the total possibilities by the factorial of the number of characters
+    let uniqueChars: Set<string> = new Set(cypherText);
+    uniqueChars.forEach((char: string) => {
+        if (char !== ' ' && cypherText.count(char) > 1) {
+            possibilities /= factorial(cypherText.count(char));
+        }
+    });
+
     // Inform user of the number of possibilities
     console.log(`The are ${possibilities} possible arrangements of the provided cypher text.`);
 }
