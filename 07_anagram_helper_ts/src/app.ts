@@ -1,5 +1,5 @@
 import { createInterface } from 'node:readline';
-import { factorial } from 'mathjs';
+import { factorial, re } from 'mathjs';
 
 // Create interface for taking user input
 const rl = createInterface({
@@ -19,6 +19,21 @@ declare global {
 // Add custom string function for counting the number of a character in a string
 String.prototype.count = function (char: string): number {
     return this.split(char).length - 1;
+}
+
+
+// Use a recursive function to generate all arrangements
+function recursiveAnagram(current: string, remaining: string): void {
+    if (remaining.length === 0) {
+        console.log(`Found arrangement: ${current}`);
+        return;
+    }
+
+    for (let i = 0; i < remaining.length; i++) {
+        const next = current + remaining[i];
+        const nextRemaining = remaining.slice(0, i) + remaining.slice(i + 1);
+        recursiveAnagram(next, nextRemaining);
+    }
 }
 
 
@@ -44,6 +59,9 @@ function processAnagram(cypherText: string): void {
 
     // Inform user of the number of possibilities
     console.log(`The are ${possibilities} possible arrangements of the provided cypher text.`);
+
+    // Start running recursive function to print arrangements
+    recursiveAnagram('', cypherText);
 }
 
 
