@@ -1,5 +1,5 @@
 import { createInterface } from 'node:readline';
-import { factorial, re } from 'mathjs';
+import { and, factorial, re } from 'mathjs';
 
 // Create interface for taking user input
 const rl = createInterface({
@@ -13,6 +13,7 @@ declare global {
     interface String {
         count(char: string): number;
     }
+    var resultSet: Set<string>;
 }
 
 
@@ -24,8 +25,9 @@ String.prototype.count = function (char: string): number {
 
 // Use a recursive function to generate all arrangements
 function recursiveAnagram(current: string, remaining: string): void {
-    if (remaining.length === 0) {
+    if (remaining.length === 0 && !global.resultSet.has(current)) {
         console.log(`Found arrangement: ${current}`);
+        global.resultSet.add(current);
         return;
     }
 
@@ -39,6 +41,9 @@ function recursiveAnagram(current: string, remaining: string): void {
 
 // create function to process provided cypher text
 function processAnagram(cypherText: string): void {
+
+    // Create global set to deduplicate results
+    global.resultSet = new Set<string>();
 
     // Confirm the user provided text
     console.log(`You provided the following cypher text: ${cypherText}`);
