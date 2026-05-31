@@ -36,6 +36,8 @@ function recursiveAnagram(current: string, remaining: string, spaces: Set<number
     // Add a space if necessary
     if (spaces.has(current.length)) {
         current += ' ';
+        recursiveAnagram(current, remaining, spaces);
+        return;
     }
 
     // Main Recursive Case
