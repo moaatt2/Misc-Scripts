@@ -7,6 +7,10 @@ The goal of this is to have scripts that can be run in the browser console to au
 
 ## Script Methodologies
 
+### Lazy
+
+Clicks a random building when available, otherwise clicks a random upgrade if available.
+
 ### Naive
 
 Always buys the cheapest buyable.
