@@ -39,3 +39,8 @@ Attempts to buy the target item once a second.
 
 Attempts to buy the target item once a second and also clicks the cookie.
 
+
+### Cookie Clicking
+
+Clicks the cookie ten times per second and attempts to buy the target item once a second.
+
