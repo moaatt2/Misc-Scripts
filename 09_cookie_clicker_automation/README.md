@@ -33,3 +33,9 @@ Saves for the most cost effecitve upgrade that can be bought with x seconds of C
 ### Basic
 
 Attempts to buy the target item once a second.
+
+
+### Basic Cookie Clicking
+
+Attempts to buy the target item once a second and also clicks the cookie.
+
