@@ -2,10 +2,12 @@
 
 ## Overview
 
-The goal of this is to have scripts that can be run in the browser console to automate purhchasing upgrades in cookie clicker
+The goal of this is to have scripts that can be run in the browser console to automate purhchasing upgrades in cookie clicker.
+
+To allow for flexibility the project is broken into `target_scripts` and `loop_scripts`. Target Scripts represent the logic for selecing what upgrade/building should be bought by implementing a `selectItem` function that returns a clickable tag or nothing. Loop Scripts are basic loops that periodically buy a target item.
 
 
-## Script Methodologies
+## Target Scipts
 
 ### Lazy
 
@@ -25,3 +27,9 @@ Saves for the most cost effective upgrade that can be bought.
 
 Saves for the most cost effecitve upgrade that can be bought with x seconds of CPS otherwise buys the cheapest item available.
 
+
+## Loop Scripts
+
+### Basic
+
+Attempts to buy the target item once a second.
