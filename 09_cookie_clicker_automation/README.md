@@ -13,6 +13,12 @@ To allow for flexibility the project is broken into `target_scripts` and `loop_s
 
 Clicks a random building when available, otherwise clicks a random upgrade if available.
 
+
+### Product Naive
+
+Takes the cheapest building, then a random upgrade.
+
+
 ### Naive
 
 Always buys the cheapest buyable.
