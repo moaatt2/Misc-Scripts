@@ -59,7 +59,12 @@ for (let filename of file_names) {
     let post  = filename.slice(11, filename.length-3);
     let url   = `http://${LOCAL_IP}:4000/${year}/${month}/${day}/${post}.html`;
     let name  = post.replaceAll("_"," ").replaceAll("-", " ");
-    let link = `[${name}](${url})`;
 
-    console.log(link);
+    let nameParts = [];
+    for (let part of name.split(" ")) {
+        nameParts.push(part.slice(0,1).toUpperCase() + part.slice(1))
+    }
+    name = nameParts.join(" ");
+
+    console.log(`[${name}](${url})`);
 }
